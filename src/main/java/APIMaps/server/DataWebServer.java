@@ -1,7 +1,8 @@
 package APIMaps.server;
 
 
-import APIMaps.server.webService.MapServiceREST;
+import APIMaps.server.api.calculateRouteTime;
+import APIMaps.server.service.RouteCalculationService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -26,22 +27,8 @@ public class DataWebServer {
 
     // entity service for bibtex
     @Bean
-    public MapServiceREST mapService() {
-        return new MapServiceREST();
+    public RouteCalculationService mapService() {
+        return new calculateRouteTime();
     }
 
-
-/*    // ------------------------------------------------------
-    //temp test JPA things
-
-
-    @Bean
-    public CommandLineRunner runner(TestMain testMain){
-        return args -> testMain.make();
-    }
-
-    @Bean
-    public TestMain testMain(){
-        return new TestMain();
-    }*/
 }

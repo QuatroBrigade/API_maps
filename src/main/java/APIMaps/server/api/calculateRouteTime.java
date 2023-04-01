@@ -1,6 +1,7 @@
-package APIMaps.api;
+package APIMaps.server.api;
 
 import APIMaps.entity.FeatureCollection;
+import APIMaps.server.service.RouteCalculationService;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -9,11 +10,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class calculateRouteTime {
+public class calculateRouteTime implements RouteCalculationService {
 
-    static String API_KEY= "5b3ce3597851110001cf62485929fc74e89c4761b432394d6034fb48";
+    String API_KEY= "5b3ce3597851110001cf62485929fc74e89c4761b432394d6034fb48";
 
-    public static FeatureCollection returnFeatureCollection(double startX, double startY, double destinationX, double destinationY) {
+    public FeatureCollection returnFeatureCollection(double startX, double startY, double destinationX, double destinationY) {
 
         String origin = ""+startX+","+startY;
         String destination = ""+destinationX+","+destinationY;
@@ -21,6 +22,7 @@ public class calculateRouteTime {
         // Construct the URL
         String mode = "foot-walking"; // Mode of transportation
         String url = "https://api.openrouteservice.org/v2/directions/" + mode + "?api_key=" + API_KEY + "&start=" + origin + "&end=" + destination + "&number_of_alternatives=1";
+
         System.out.println(url);
 
         try {
@@ -42,32 +44,27 @@ public class calculateRouteTime {
 
             // parse string data into object based on Json
             String jsonString = response.toString();
-            FeatureCollection featureCollection = gson.fromJson(jsonString, FeatureCollection.class);
+            return gson.fromJson(jsonString, FeatureCollection.class);
 
-            // test
-            //System.out.println("Distance: " + featureCollection.getFeatures()[0].getProperties().getSummary().getDistance());
-            //System.out.println("Duration: " + featureCollection.getFeatures()[0].getProperties().getSummary().getDuration());
-
-            return featureCollection;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static void main(String[] args) {
-
-        String origin = "21.254345,48.727035"; // Latitude and Longitude of the starting point
-        String destination = "21.257070,48.727775"; // Latitude and Longitude of the destination
-
-
-        FeatureCollection result = returnFeatureCollection(21.254345, 48.727035 ,21.257070, 48.727775);
-
-        assert result != null;
-        System.out.println(result.getFeatures()[0].getProperties().getSummary().getDuration());
-        System.out.println(result.getFeatures()[0].getProperties().getSummary().getDistance());
-
-
-    }
+//    public static void main(String[] args) {
+//
+//        String origin = "21.254345,48.727035"; // Latitude and Longitude of the starting point
+//        String destination = "21.257070,48.727775"; // Latitude and Longitude of the destination
+//
+//
+//        FeatureCollection result = returnFeatureCollection(21.254345, 48.727035 ,21.257070, 48.727775);
+//
+//        assert result != null;
+//        System.out.println(result.getFeatures()[0].getProperties().getSummary().getDuration());
+//        System.out.println(result.getFeatures()[0].getProperties().getSummary().getDistance());
+//
+//
+//    }
 
 }
