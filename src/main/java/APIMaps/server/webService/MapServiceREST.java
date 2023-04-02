@@ -40,7 +40,7 @@ public class MapServiceREST {
         return new Gson().toJson(returnTwoDouble);
     }
 
-    @GetMapping("/route/startX/{startx}/starty/{starty}")
+    @GetMapping("/route/startX/{startx}/startY/{starty}")
     public double[][][] loadBoundaries(@PathVariable double startx, @PathVariable double starty) {
 
         if(startx != 0 || starty != 0) {
