@@ -2,6 +2,8 @@ package APIMaps.server.webService;
 
 
 import APIMaps.entity.FeatureCollection;
+import APIMaps.entity.FeatureCollection2;
+import APIMaps.entity.Geometry2;
 import APIMaps.entity.ReturnTwoDouble;
 import APIMaps.server.service.RouteCalculationService;
 import com.google.gson.Gson;
@@ -31,11 +33,11 @@ public class MapServiceREST {
     private RouteCalculationService routeCalculationService;
 
     @GetMapping("/route/startX/{startx}/starty/{starty}/endX/{endx}/endY/{endy}")
-    public String savePdfInDB(@PathVariable double startx, @PathVariable double starty,
+    public String loadDurationAndDistance(@PathVariable double startx, @PathVariable double starty,
                            @PathVariable double endx, @PathVariable double endy) {
 
         FeatureCollection result =
-        routeCalculationService.returnFeatureCollection(startx, starty, endx, endy);
+        routeCalculationService.returnDurationAndDistance(startx, starty, endx, endy);
 
         ReturnTwoDouble returnTwoDouble = new ReturnTwoDouble(result.getFeatures()[0].getProperties().getSummary().getDuration(),
                                                               result.getFeatures()[0].getProperties().getSummary().getDistance());
@@ -43,6 +45,16 @@ public class MapServiceREST {
         return new Gson().toJson(returnTwoDouble);
     }
 
+    @GetMapping("/route/startX/{startx}/starty/{starty}")
+    public double[][][] loadBoundaries(@PathVariable double startx, @PathVariable double starty) {
 
+        FeatureCollection2 result =
+                routeCalculationService.returnBoundaries(startx, starty);
+
+        int lastIdx = result.getFeatures().length - 1;
+
+        return result.getFeatures()[lastIdx].getGeometry().getCoordinates();
+
+    }
 
 }
