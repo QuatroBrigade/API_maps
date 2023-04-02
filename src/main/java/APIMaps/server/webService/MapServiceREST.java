@@ -34,10 +34,14 @@ public class MapServiceREST {
         FeatureCollection result =
         routeCalculationService.returnDurationAndDistance(startx, starty, endx, endy);
 
-        ReturnTwoDouble returnTwoDouble = new ReturnTwoDouble(result.getFeatures()[0].getProperties().getSummary().getDuration(),
-                                                              result.getFeatures()[0].getProperties().getSummary().getDistance());
+        if(result != null) {
+            ReturnTwoDouble returnTwoDouble = new ReturnTwoDouble(result.getFeatures()[0].getProperties().getSummary().getDuration(),
+                    result.getFeatures()[0].getProperties().getSummary().getDistance());
+            return new Gson().toJson(returnTwoDouble);
+        } else {
+            return null;
+        }
 
-        return new Gson().toJson(returnTwoDouble);
     }
 
     @GetMapping("/route/startX/{startx}/startY/{starty}")
@@ -46,15 +50,17 @@ public class MapServiceREST {
         if(startx != 0 || starty != 0) {
             FeatureCollection2 result =
                     routeCalculationService.returnBoundaries(startx, starty);
+            if(result != null){
+                int lastIdx = result.getFeatures().length - 1;
 
-            int lastIdx = result.getFeatures().length - 1;
+                return result.getFeatures()[lastIdx].getGeometry().getCoordinates();
+            } else {
+                return null;
+            }
 
-            return result.getFeatures()[lastIdx].getGeometry().getCoordinates();
         } else {
             return new double[0][0][0];
         }
-
-
     }
 
 }
